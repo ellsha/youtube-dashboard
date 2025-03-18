@@ -5,6 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import useDebounce from "../useDebounce";
 import { handleLeftHandleMouseDown } from "./handleLeftHandleMouseDown";
 import { handleRightHandleMouseDown } from "./handleRightHandleMouseDown";
 import { handleTrackPinMouseDown } from "./handleTrackPinMouseDown";
@@ -64,12 +65,15 @@ const useTrimmer = ({
     }
   }, [setTrimmedEnd, duration, trimmedEnd]);
 
-  // saving the trimmedStart and trimmedEnd to localStorage
-  useEffect(() => {
-    // TODO: debounce
+  const debouncedSaveTrimmedValues = useDebounce(() => {
     localStorage.setItem(trimmedStartKey, JSON.stringify(trimmedStart));
     localStorage.setItem(trimmedEndKey, JSON.stringify(trimmedEnd));
-  }, [trimmedStart, trimmedEnd, trimmedStartKey, trimmedEndKey]);
+  }, 500);
+
+  // saving the trimmedStart and trimmedEnd to localStorage
+  useEffect(() => {
+    debouncedSaveTrimmedValues();
+  }, [debouncedSaveTrimmedValues]);
 
   useEffect(() => {
     const updateTime = () => {

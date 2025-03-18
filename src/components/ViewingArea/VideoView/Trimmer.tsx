@@ -1,4 +1,5 @@
 import React from "react";
+import calculatePercentage from "@/helpers/getPercentage";
 import Handle from "./Handle";
 
 interface TrimmerProps {
@@ -26,13 +27,10 @@ const Trimmer: React.FC<TrimmerProps> = ({
   handleTrimAreaMouseDown,
   handleTrackPinMouseDown,
 }) => {
-  const trimStartPct = duration ? (trimmedStart / duration) * 100 : 0;
-  const trimWidthPct = duration
-    ? ((trimmedEnd - trimmedStart) / duration) * 100
-    : 0;
-  let currentPct = duration ? (currentTime / duration) * 100 : 0;
-  currentPct = Math.min(
-    Math.max(currentPct, trimStartPct),
+  const trimStartPct = calculatePercentage(trimmedStart, duration);
+  const trimWidthPct = calculatePercentage(trimmedEnd - trimmedStart, duration);
+  const currentPct = Math.min(
+    Math.max(calculatePercentage(currentTime, duration), trimStartPct),
     trimStartPct + trimWidthPct,
   );
 

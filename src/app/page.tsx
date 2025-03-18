@@ -1,29 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
+import data from "../../data/data.json";
+import { ElementOf } from 'ts-essentials';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 
-const videos = [
-  { id: 1, color: "bg-orange-200", title: "Video 1", description: "This is a description for Video 1" },
-  { id: 2, color: "bg-purple-200", title: "Video 2", description: "This is a description for Video 2" },
-  { id: 3, color: "bg-pink-200", title: "Video 3", description: "This is a description for Video 3" },
-  { id: 4, color: "bg-cyan-200", title: "Video 4", description: "This is a description for Video 4" },
-  { id: 5, color: "bg-purple-200", title: "Video 5", description: "This is a description for Video 5" },
-  { id: 6, color: "bg-amber-200", title: "Video 6", description: "This is a description for Video 6" },
-  { id: 7, color: "bg-green-200", title: "Video 7", description: "This is a description for Video 7" },
-  { id: 8, color: "bg-lime-200", title: "Video 8", description: "This is a description for Video 8" },
-  { id: 9, color: "bg-yellow-200", title: "Video 9", description: "This is a description for Video 9" },
-  { id: 10, color: "bg-cyan-200", title: "Video 10", description: "This is a description for Video 10" },
-  { id: 11, color: "bg-indigo-200", title: "Video 11", description: "This is a description for Video 11" },
-  { id: 12, color: "bg-red-200", title: "Video 12", description: "This is a description for Video 12" },
-  { id: 13, color: "bg-pink-200", title: "Video 13", description: "This is a description for Video 13" },
-  { id: 14, color: "bg-orange-200", title: "Video 14", description: "This is a description for Video 14" },
-  { id: 15, color: "bg-purple-200", title: "Video 15", description: "This is a description for Video 15" },
-];
+const getVideoId = (video: ElementOf<typeof data.items>): string => {
+  return video.id.videoId ?? video.id.channelId;
+};
 
 export default function Home() {
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-  const selectedVideo = videos.find((video) => video.id === selectedId);
+  const videos = data.items;
+
+  const [selected, setSelected] = useState<string | null>(null);
+  const selectedVideo = videos.find((video) => getVideoId(video) === selected);
 
   return (
     <div className="flex h-screen flex-col md:flex-row">
@@ -45,21 +35,26 @@ export default function Home() {
         </div>
         {/* Scrollable video list */ }
         <div className="flex-1 overflow-y-auto">
-          { videos.map((video) => (
-            <div
-              key={ video.id }
-              className={ `p-4 cursor-pointer ${ selectedId === video.id ? "bg-gray-100" : "bg-white" } flex items-center` }
-              onClick={ () => setSelectedId(video.id) }
-            >
-              {/* Thumbnail */ }
-              <div className={ `aspect-[4/3] w-36 md:max-lg:w-24 mr-4 ${ video.color }` } />
-              {/* Title and description */ }
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold">{ video.title }</h3>
-                <p className="text-sm text-gray-500">{ video.description }</p>
+          { videos.map((video) => {
+            const videoId = getVideoId(video);
+
+            return (
+              <div
+                key={ videoId }
+                className={ `p-4 cursor-pointer ${ selected === videoId ? "bg-gray-100" : "bg-white" } flex items-center` }
+                onClick={ () => setSelected(videoId) }
+              >
+                {/* Thumbnail */ }
+                <img src={ video.snippet.thumbnails.high.url } className={ "w-36 md:max-lg:w-24 mr-4" }
+                     alt={ video.snippet.title }/>
+                {/* Title and description */ }
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold">{ video.snippet.title }</h3>
+                  <p className="text-sm text-gray-500">{ video.snippet.description }</p>
+                </div>
               </div>
-            </div>
-          )) }
+            );
+          }) }
         </div>
       </div>
       {/* Main viewing area */ }
@@ -70,11 +65,27 @@ export default function Home() {
             To start, please select a video
           </div>
         ) : (
-          // Video block view
-          <div
-            className={ `aspect-[4/3] w-full max-h-full flex items-center justify-center text-white ${ selectedVideo.color }` }
-          >
-            { selectedVideo.title }
+          // Video view
+          <div className="flex flex-col items-center h-full">
+            {/* Video container */ }
+            <div className="w-fit">
+              {/* Video player */ }
+              <img
+                src={ selectedVideo.snippet.thumbnails.high.url }
+                alt={ selectedVideo.snippet.title }
+                className="w-full h-auto object-contain"
+              />
+
+              {/* Controls */ }
+              <div className="mt-4 w-full">
+                {/* Progress bar */ }
+                <div className="w-full h-2 bg-gray-300 rounded-full relative">
+                  <div className="absolute top-0 left-0 h-full bg-blue-500 w-[25%]"></div>
+                </div>
+
+                {/*TODO implement controls*/ }
+              </div>
+            </div>
           </div>
         ) }
       </div>

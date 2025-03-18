@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 
 const videos = [
   { id: 1, color: "bg-orange-200", title: "Video 1", description: "This is a description for Video 1" },
@@ -38,8 +39,7 @@ export default function Home() {
               className="w-full pl-10 pr-5 py-2 border border-gray-300 rounded-md"
             />
             <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-              {/*TODO: replace with heroicons*/}
-              🔍
+              <MagnifyingGlassIcon className="size-5 text-gray-500" />
             </span>
           </div>
         </div>

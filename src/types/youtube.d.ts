@@ -7,6 +7,9 @@ export interface YTPlayer {
   unMute: () => void;
   isMuted: () => boolean;
   destroy: () => void;
+  seekTo: (seconds: number) => void;
+  getCurrentTime: () => number;
+  getDuration: () => number;
 }
 
 export interface PlayerEvent {

@@ -31,6 +31,7 @@ const usePlayer = (video: Video) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(100);
   const [isMuted, setIsMuted] = useState(false);
+  const [duration, setDuration] = useState(0);
 
   useEffect(() => {
     const createPlayer = () => {
@@ -39,6 +40,7 @@ const usePlayer = (video: Video) => {
         playerVars: PLAYER_VARS,
         events: {
           onReady: (event: PlayerEvent) => {
+            setDuration(event.target.getDuration());
             setVolume(event.target.getVolume());
             setIsMuted(event.target.isMuted());
           },
@@ -96,13 +98,20 @@ const usePlayer = (video: Video) => {
     }
   };
 
+  const seekTo = (time: number) => {
+    playerRef.current?.seekTo(time);
+  };
+
   return {
+    playerRef,
     isPlaying,
     volume,
     isMuted,
+    duration,
     togglePlay,
     setVolume: setVolumeHandler,
     toggleMute,
+    seekTo,
   };
 };
 

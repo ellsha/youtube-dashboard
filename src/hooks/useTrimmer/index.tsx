@@ -66,6 +66,7 @@ const useTrimmer = ({
 
   // saving the trimmedStart and trimmedEnd to localStorage
   useEffect(() => {
+    // TODO: debounce
     localStorage.setItem(trimmedStartKey, JSON.stringify(trimmedStart));
     localStorage.setItem(trimmedEndKey, JSON.stringify(trimmedEnd));
   }, [trimmedStart, trimmedEnd, trimmedStartKey, trimmedEndKey]);

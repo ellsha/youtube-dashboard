@@ -78,7 +78,7 @@ const usePlayer = (video: Video) => {
     }
   };
 
-  const setVolumeHandler = (newVolume: number) => {
+  const handleVolumeChange = (newVolume: number) => {
     if (!playerRef.current) {
       return;
     }
@@ -113,7 +113,7 @@ const usePlayer = (video: Video) => {
     isMuted,
     duration,
     togglePlay,
-    setVolume: setVolumeHandler,
+    handleVolumeChange,
     toggleMute,
     seekTo,
   };

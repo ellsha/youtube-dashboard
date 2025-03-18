@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
+import { getVideoId } from "@/helpers/video";
 import { Video } from "@/types/video";
 import imagePlaceholder from "@public/image-placeholder.png";
 
@@ -15,6 +16,7 @@ const VideoItem: React.FC<Props> = ({ video, onClick, isSelectedVideo }) => {
 
   return (
     <div
+      data-video-id={getVideoId(video)}
       className={`cursor-pointer p-4 ${isSelectedVideo ? "bg-gray-100" : "bg-white"} flex max-w-full items-stretch`}
       onClick={onClick}
     >

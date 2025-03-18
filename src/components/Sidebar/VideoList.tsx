@@ -24,9 +24,10 @@ const VideoList: React.FC<Props> = ({
   const { isLoading, setIsLoading } = useInfiniteScroll(containerRef);
 
   const loadMoreVideos = useCallback(() => {
-    setVisibleVideos((prev) => {
-      return [...prev, ...videos.slice(prev.length, prev.length + PAGE_LIMIT)];
-    });
+    setVisibleVideos((prev) => [
+      ...prev,
+      ...videos.slice(prev.length, prev.length + PAGE_LIMIT),
+    ]);
   }, [videos]);
 
   useEffect(() => {
@@ -35,6 +36,31 @@ const VideoList: React.FC<Props> = ({
       setIsLoading(false);
     }
   }, [isLoading, loadMoreVideos, setIsLoading]);
+
+  // when user clicks on the "next", the next video might be
+  // not visible on the screen;
+  // this effect scrolls down if the video is partially or fully off-screen
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!selectedVideoId || !container) {
+      return;
+    }
+
+    const videoElement = container.querySelector(
+      `[data-video-id="${selectedVideoId}"]`,
+    );
+    if (!(videoElement instanceof HTMLElement)) {
+      return;
+    }
+
+    const containerRect = container.getBoundingClientRect();
+    const videoRect = videoElement.getBoundingClientRect();
+
+    // only scroll if the video is hidden (fully or partially) at the bottom
+    if (videoRect.bottom > containerRect.bottom) {
+      videoElement.scrollIntoView({ block: "end", behavior: "smooth" });
+    }
+  }, [selectedVideoId, videos]);
 
   return (
     <div className="flex-1 overflow-y-auto" ref={containerRef}>

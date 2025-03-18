@@ -9,17 +9,22 @@ import Trimmer from "./Trimmer";
 
 interface Props {
   video: Video;
+  handlePrevVideo: () => void;
+  handleNextVideo: () => void;
+  hasPrevVideo: boolean;
+  hasNextVideo: boolean;
 }
 
-const VideoView: React.FC<Props> = ({ video }) => {
-  const { isLoading, ...playerControls } = usePlayer(video);
+const VideoView: React.FC<Props> = ({ video, ...videoControlProps }) => {
+  const { isLoading, togglePlay, ...playerControls } = usePlayer(video);
   const trimmerControls = useTrimmer({
     ...playerControls,
+    togglePlay,
     videoId: getVideoId(video),
   });
 
   return (
-    <div className="flex w-full flex-col items-center">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-4">
       {isLoading && <Spinner />}
 
       {/*Video player*/}
@@ -29,32 +34,14 @@ const VideoView: React.FC<Props> = ({ video }) => {
 
       {/*Toolbar*/}
       {!isLoading && (
-        <>
+        <div className="flex w-full flex-col items-center gap-5">
           <Controls
-            isPlaying={playerControls.isPlaying}
+            {...playerControls}
+            {...videoControlProps}
             togglePlay={trimmerControls.safeTogglePlay}
-            isMuted={playerControls.isMuted}
-            toggleMute={playerControls.toggleMute}
-            volume={playerControls.volume}
-            handleVolumeChange={playerControls.setVolume}
           />
-          <Trimmer
-            trimmerRef={trimmerControls.trimmerRef}
-            currentTime={trimmerControls.currentTime}
-            trimmedStart={trimmerControls.trimmedStart}
-            trimmedEnd={trimmerControls.trimmedEnd}
-            duration={playerControls.duration}
-            handleTrimAreaMouseDown={trimmerControls.handleTrimAreaMouseDown}
-            handleTrackPinMouseDown={trimmerControls.handleTrackPinMouseDown}
-            handleLeftHandleMouseDown={
-              trimmerControls.handleLeftHandleMouseDown
-            }
-            handleRightHandleMouseDown={
-              trimmerControls.handleRightHandleMouseDown
-            }
-            seekTo={playerControls.seekTo}
-          />
-        </>
+          <Trimmer {...trimmerControls} {...playerControls} />
+        </div>
       )}
     </div>
   );

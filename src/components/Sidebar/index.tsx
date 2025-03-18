@@ -14,7 +14,7 @@ const Sidebar: React.FC<Props> = ({
   selectedVideoId,
   setSelectedVideoId,
 }) => (
-  <div className="order-1 flex flex-col md:order-0 md:w-1/4 md:min-w-2xs md:border-r md:border-gray-400">
+  <div className="order-1 flex flex-col overflow-hidden md:order-0 md:w-1/4 md:min-w-2xs md:border-r md:border-gray-400">
     <Header />
     <VideoList
       videos={videos}

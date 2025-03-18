@@ -31,6 +31,7 @@ const usePlayer = (video: Video) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(100);
   const [isMuted, setIsMuted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [duration, setDuration] = useState(0);
 
   useEffect(() => {
@@ -43,12 +44,14 @@ const usePlayer = (video: Video) => {
             setDuration(event.target.getDuration());
             setVolume(event.target.getVolume());
             setIsMuted(event.target.isMuted());
+            setIsLoading(false);
           },
           onStateChange: (event: StateChangeEvent) => {
-            if (event.data === window.YT.PlayerState.PLAYING)
+            if (event.data === window.YT.PlayerState.PLAYING) {
               setIsPlaying(true);
-            else if (event.data === window.YT.PlayerState.PAUSED)
+            } else if (event.data === window.YT.PlayerState.PAUSED) {
               setIsPlaying(false);
+            }
           },
         },
       });
@@ -103,6 +106,7 @@ const usePlayer = (video: Video) => {
   };
 
   return {
+    isLoading,
     playerRef,
     isPlaying,
     volume,

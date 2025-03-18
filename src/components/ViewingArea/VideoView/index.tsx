@@ -1,4 +1,5 @@
 import React from "react";
+import { getVideoId } from "@/helpers/video";
 import usePlayer from "@/hooks/usePlayer";
 import useTrimmer from "@/hooks/useTrimmer";
 import { Video } from "@/types/video";
@@ -11,7 +12,10 @@ interface Props {
 
 const VideoView: React.FC<Props> = ({ video }) => {
   const playerControls = usePlayer(video);
-  const trimmerControls = useTrimmer(playerControls);
+  const trimmerControls = useTrimmer({
+    ...playerControls,
+    videoId: getVideoId(video),
+  });
 
   return (
     <div className="flex w-full flex-col items-center">

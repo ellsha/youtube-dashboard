@@ -22,21 +22,53 @@ export interface UseTrimmerHandlersProps {
   seekTo: (time: number) => void;
 }
 
-const useTrimmer = (playerControls: {
+interface UseTrimmerProps {
+  // player props
   seekTo: (time: number) => void;
   duration: number;
   togglePlay: () => void;
   isPlaying: boolean;
-}) => {
-  const { seekTo, duration, togglePlay, isPlaying } = playerControls;
+  // internal props
+  videoId: string;
+}
+
+const useTrimmer = ({
+  seekTo,
+  duration,
+  togglePlay,
+  isPlaying,
+  videoId,
+}: UseTrimmerProps) => {
   const trimmerRef = useRef<HTMLDivElement>(null);
   const [currentTime, setCurrentTime] = useState(0);
-  const [trimmedStart, setTrimmedStart] = useState(0);
-  const [trimmedEnd, setTrimmedEnd] = useState(0);
 
+  const trimmedStartKey = `${videoId}:trimmedStart`;
+  const trimmedEndKey = `${videoId}:trimmedEnd`;
+
+  // loading the saved trimmedStart and trimmedEnd values from localStorage
+  const [trimmedStart, setTrimmedStart] = useState<number>(() => {
+    const storedTrimmedStart = localStorage.getItem(trimmedStartKey);
+    // fallback to 0 if not found
+    return storedTrimmedStart ? parseInt(storedTrimmedStart) : 0;
+  });
+  const [trimmedEnd, setTrimmedEnd] = useState<number>(() => {
+    const storedTrimmedEnd = localStorage.getItem(trimmedEndKey);
+    // fallback to duration if not found
+    return storedTrimmedEnd ? parseInt(storedTrimmedEnd) : duration;
+  });
+
+  // refreshing trimmedEnd when player is loaded
   useEffect(() => {
-    setTrimmedEnd(duration);
-  }, [duration]);
+    if (duration > 0 && trimmedEnd == 0) {
+      setTrimmedEnd(duration);
+    }
+  }, [setTrimmedEnd, duration, trimmedEnd]);
+
+  // saving the trimmedStart and trimmedEnd to localStorage
+  useEffect(() => {
+    localStorage.setItem(trimmedStartKey, JSON.stringify(trimmedStart));
+    localStorage.setItem(trimmedEndKey, JSON.stringify(trimmedEnd));
+  }, [trimmedStart, trimmedEnd, trimmedStartKey, trimmedEndKey]);
 
   useEffect(() => {
     const updateTime = () => {

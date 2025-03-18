@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { getVideoId } from "@/helpers/video";
-import { Video } from "@/types";
+import { Video } from "@/types/video";
 import Sidebar from "./Sidebar";
 import ViewingArea from "./ViewingArea";
 

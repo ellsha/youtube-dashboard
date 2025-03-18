@@ -1,4 +1,4 @@
-import { Video } from "@/types";
+import { Video } from "@/types/video";
 
 export const search = (videos: Video[], searchString: string) =>
   searchString.trim() === ""

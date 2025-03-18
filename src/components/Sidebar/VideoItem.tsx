@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import { Video } from "@/types";
+import { Video } from "@/types/video";
 import imagePlaceholder from "@public/image-placeholder.png";
 
 interface Props {

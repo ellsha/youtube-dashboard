@@ -1,5 +1,5 @@
 import React from "react";
-import { Video } from "@/types";
+import { Video } from "@/types/video";
 import Placeholder from "./Placeholder";
 import VideoView from "./VideoView";
 

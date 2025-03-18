@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { search } from "@/helpers/search";
 import useDebounce from "@/hooks/useDebounce";
-import { Video } from "@/types";
+import { Video } from "@/types/video";
 import Header from "./Header";
 import VideoList from "./VideoList";
 

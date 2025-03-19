@@ -12,21 +12,20 @@ interface Props {
 
 const Dashboard: React.FC<Props> = ({ videos }) => {
   const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
+  const [filteredVideos, setFilteredVideos] = useState(videos);
 
-  const selectedIndex = videos.findIndex(
+  const selectedIndex = filteredVideos.findIndex(
     (video) => getVideoId(video) === selectedVideoId,
   );
-  const prevVideo = videos[selectedIndex - 1] || null;
-  const selectedVideo = videos[selectedIndex];
-  const nextVideo = videos[selectedIndex + 1] || null;
+  const prevVideo = filteredVideos[selectedIndex - 1] || null;
+  const nextVideo = filteredVideos[selectedIndex + 1] || null;
+
+  const selectedVideo = videos.find(
+    (video) => getVideoId(video) === selectedVideoId,
+  );
 
   return (
-    <div className="flex h-screen flex-col md:flex-row">
-      <Sidebar
-        videos={videos}
-        selectedVideoId={selectedVideoId}
-        setSelectedVideoId={setSelectedVideoId}
-      />
+    <div className="flex h-screen min-w-2xs flex-col lg:flex-row lg:flex-row-reverse">
       <ViewingArea
         video={selectedVideo ?? null}
         hasPrevVideo={prevVideo !== null}
@@ -41,6 +40,13 @@ const Dashboard: React.FC<Props> = ({ videos }) => {
             setSelectedVideoId(getVideoId(nextVideo));
           }
         }}
+      />
+      <Sidebar
+        videos={videos}
+        filteredVideos={filteredVideos}
+        setFilteredVideos={setFilteredVideos}
+        selectedVideoId={selectedVideoId}
+        setSelectedVideoId={setSelectedVideoId}
       />
     </div>
   );

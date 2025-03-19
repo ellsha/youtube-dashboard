@@ -1,4 +1,5 @@
 import React from "react";
+import { clamp } from "@/helpers/utils";
 import { UseTrimmerHandlersProps } from ".";
 
 export const handleLeftHandleMouseDown =
@@ -23,8 +24,9 @@ export const handleLeftHandleMouseDown =
 
     const onMouseMove = (moveEvent: MouseEvent) => {
       const positionX = moveEvent.clientX - containerRect.left;
-      const clampedX = Math.min(Math.max(0, positionX), containerRect.width);
+      const clampedX = clamp(positionX, 0, containerRect.width);
       const newTrimStart = (clampedX / containerRect.width) * duration;
+
       if (newTrimStart < trimmedEnd - 0.1) {
         setTrimmedStart(newTrimStart);
         if (currentTime < newTrimStart) {

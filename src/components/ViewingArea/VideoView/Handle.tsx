@@ -15,7 +15,9 @@ const Handle: React.FC<HandleProps> = ({ position, onMouseDown, onClick }) => (
     onMouseDown={onMouseDown}
     onClick={onClick}
   >
-    <span className="px-1 text-xs font-bold text-white select-none">||</span>
+    <span className="px-1 text-xs font-extrabold text-white select-none">
+      ||
+    </span>
   </div>
 );
 

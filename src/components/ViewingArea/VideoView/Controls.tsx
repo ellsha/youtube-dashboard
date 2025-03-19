@@ -1,4 +1,6 @@
 import React from "react";
+import { PrevNextProps } from "@/components/ViewingArea";
+import { formatTime } from "@/helpers/utils";
 import {
   BackwardIcon,
   ForwardIcon,
@@ -8,17 +10,15 @@ import {
   SpeakerXMarkIcon,
 } from "@heroicons/react/24/solid";
 
-interface ControlsProps {
+interface ControlsProps extends PrevNextProps {
   isPlaying: boolean;
   togglePlay: () => void;
   isMuted: boolean;
   toggleMute: () => void;
   volume: number;
   handleVolumeChange: (value: number) => void;
-  handlePrevVideo: () => void;
-  handleNextVideo: () => void;
-  hasPrevVideo: boolean;
-  hasNextVideo: boolean;
+  currentTime: number;
+  duration: number;
 }
 
 const Controls: React.FC<ControlsProps> = ({
@@ -32,10 +32,13 @@ const Controls: React.FC<ControlsProps> = ({
   handleNextVideo,
   hasPrevVideo,
   hasNextVideo,
+  currentTime,
+  duration,
 }) => (
-  <div className="flex w-1/2 min-w-xs justify-between space-x-4 rounded bg-white px-4 py-2">
-    <div className="flex items-center gap-2">
-      {/*Previous video*/}
+  <div className="flex w-full items-center justify-between rounded-md bg-white px-2 py-1 md:w-min md:gap-10 md:px-4 md:py-2">
+    {/* Left section */}
+    <div className="flex items-center gap-1 md:gap-2">
+      {/* Previous video button */}
       <button
         onClick={handlePrevVideo}
         disabled={!hasPrevVideo}
@@ -44,7 +47,7 @@ const Controls: React.FC<ControlsProps> = ({
         <BackwardIcon className="h-6 w-6" />
       </button>
 
-      {/*Play/pause*/}
+      {/* Play/Pause button */}
       <button
         onClick={togglePlay}
         className="cursor-pointer text-gray-700 hover:text-gray-900"
@@ -56,7 +59,7 @@ const Controls: React.FC<ControlsProps> = ({
         )}
       </button>
 
-      {/*Next video*/}
+      {/* Next video button */}
       <button
         onClick={handleNextVideo}
         disabled={!hasNextVideo}
@@ -66,8 +69,15 @@ const Controls: React.FC<ControlsProps> = ({
       </button>
     </div>
 
-    {/*Sound control*/}
-    <div className="flex items-center space-x-2">
+    {/* Middle section (Current time / Total time) */}
+    <div className="whitespace-nowrap text-gray-900">
+      {formatTime(currentTime)}
+      <span className="hidden sm:inline"> / {formatTime(duration)}</span>
+    </div>
+
+    {/* Right section (Sound control) */}
+    <div className="flex items-center space-x-1 lg:space-x-2">
+      {/* Mute/Unmute button */}
       <button
         onClick={toggleMute}
         className="text-gray-700 hover:text-gray-900"
@@ -78,13 +88,15 @@ const Controls: React.FC<ControlsProps> = ({
           <SpeakerWaveIcon className="h-6 w-6" />
         )}
       </button>
+
+      {/* Volume control slider */}
       <input
         type="range"
         min="0"
         max="100"
         value={volume}
         onChange={(e) => handleVolumeChange(parseInt(e.target.value, 10))}
-        className="w-24 accent-red-500"
+        className="w-15 accent-blue-500 lg:w-20"
       />
     </div>
   </div>

@@ -5,6 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { clamp } from "@/helpers/utils";
 import useDebounce from "../useDebounce";
 import { handleLeftHandleMouseDown } from "./handleLeftHandleMouseDown";
 import { handleRightHandleMouseDown } from "./handleRightHandleMouseDown";
@@ -81,8 +82,7 @@ const useTrimmer = ({
         // time on the next interval (current time incremented by 100ms)
         const time = currentTime + 0.1;
 
-        // forcing the boundaries [ trimmedStart >= time >= trimmedEnd ]
-        setCurrentTime(Math.max(trimmedStart, Math.min(time, trimmedEnd)));
+        setCurrentTime(clamp(time, trimmedStart, trimmedEnd));
 
         // the video can only start playing from the trimmedStart
         if (time < trimmedStart) {
@@ -123,10 +123,10 @@ const useTrimmer = ({
 
   return {
     trimmerRef,
+    safeTogglePlay,
     currentTime,
     trimmedStart,
     trimmedEnd,
-    safeTogglePlay,
     handleLeftHandleMouseDown: handleLeftHandleMouseDown(trimmerProps),
     handleRightHandleMouseDown: handleRightHandleMouseDown(trimmerProps),
     handleTrimAreaMouseDown: handleTrimAreaMouseDown(trimmerProps),

@@ -1,5 +1,6 @@
 import React from "react";
 import Spinner from "@/components/Spinner";
+import { PrevNextProps } from "@/components/ViewingArea";
 import { getVideoId } from "@/helpers/video";
 import usePlayer from "@/hooks/usePlayer";
 import useTrimmer from "@/hooks/useTrimmer";
@@ -7,12 +8,8 @@ import { Video } from "@/types/video";
 import Controls from "./Controls";
 import Trimmer from "./Trimmer";
 
-interface Props {
+interface Props extends PrevNextProps {
   video: Video;
-  handlePrevVideo: () => void;
-  handleNextVideo: () => void;
-  hasPrevVideo: boolean;
-  hasNextVideo: boolean;
 }
 
 const VideoView: React.FC<Props> = ({ video, ...videoControlProps }) => {
@@ -24,25 +21,33 @@ const VideoView: React.FC<Props> = ({ video, ...videoControlProps }) => {
   });
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-4">
-      {isLoading && <Spinner />}
+    <div className="relative flex h-full w-full flex-col items-center justify-center gap-2 lg:gap-4">
+      {/*using relative&absolute centering and opacity-0 instead of hidden*/}
+      {/*to keep constant the height on the block*/}
+      {/*and avoid creating jumping of the height on small screens*/}
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Spinner />
+        </div>
+      )}
 
       {/*Video player*/}
-      <div className={`aspect-video w-full ${isLoading ? "hidden" : ""}`}>
-        <div id="player" className="h-full w-full rounded" />
+      <div className={`${isLoading ? "opacity-0" : "opacity-100"} w-max`}>
+        <div id="player" className="aspect-[16/9] h-auto w-full rounded-md" />
       </div>
 
       {/*Toolbar*/}
-      {!isLoading && (
-        <div className="flex w-full flex-col items-center gap-5">
-          <Controls
-            {...playerControls}
-            {...videoControlProps}
-            togglePlay={trimmerControls.safeTogglePlay}
-          />
-          <Trimmer {...trimmerControls} {...playerControls} />
-        </div>
-      )}
+      <div
+        className={`flex w-full flex-col items-center gap-2 lg:gap-4 ${isLoading ? "opacity-0" : "opacity-100"}`}
+      >
+        <Controls
+          {...playerControls}
+          {...videoControlProps}
+          {...trimmerControls}
+          togglePlay={trimmerControls.safeTogglePlay}
+        />
+        <Trimmer {...trimmerControls} {...playerControls} />
+      </div>
     </div>
   );
 };

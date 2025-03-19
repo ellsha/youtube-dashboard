@@ -20,6 +20,7 @@ const VideoList: React.FC<Props> = ({
   const [visibleVideos, setVisibleVideos] = useState(
     videos.slice(0, PAGE_LIMIT),
   );
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { isLoading, setIsLoading } = useInfiniteScroll(containerRef);
 
@@ -28,6 +29,10 @@ const VideoList: React.FC<Props> = ({
       ...prev,
       ...videos.slice(prev.length, prev.length + PAGE_LIMIT),
     ]);
+  }, [videos]);
+
+  useEffect(() => {
+    setVisibleVideos(videos.slice(0, PAGE_LIMIT));
   }, [videos]);
 
   useEffect(() => {
@@ -64,6 +69,11 @@ const VideoList: React.FC<Props> = ({
 
   return (
     <div className="flex-1 overflow-y-auto" ref={containerRef}>
+      {visibleVideos.length === 0 && (
+        <div className="flex w-full justify-center p-8">
+          <span className="text-gray-400">Nothing matches your search</span>
+        </div>
+      )}
       {visibleVideos.map((video) => {
         const videoId = getVideoId(video);
 

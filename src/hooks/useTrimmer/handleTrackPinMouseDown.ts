@@ -1,4 +1,5 @@
 import React from "react";
+import { clamp } from "@/helpers/utils";
 import { UseTrimmerHandlersProps } from ".";
 
 export const handleTrackPinMouseDown =
@@ -23,10 +24,7 @@ export const handleTrackPinMouseDown =
     const onMouseMove = (moveEvent: MouseEvent) => {
       const positionX = moveEvent.clientX - containerRect.left;
       const newTimeFromFull = (positionX / containerRect.width) * duration;
-      const newTime = Math.min(
-        Math.max(newTimeFromFull, trimmedStart),
-        trimmedEnd,
-      );
+      const newTime = clamp(newTimeFromFull, trimmedStart, trimmedEnd);
       setCurrentTime(newTime);
       seekTo(newTime);
     };

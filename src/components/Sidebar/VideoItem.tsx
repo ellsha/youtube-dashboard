@@ -17,11 +17,11 @@ const VideoItem: React.FC<Props> = ({ video, onClick, isSelectedVideo }) => {
   return (
     <div
       data-video-id={getVideoId(video)}
-      className={`cursor-pointer p-4 ${isSelectedVideo ? "bg-gray-100" : "bg-white"} flex max-w-full items-stretch`}
+      className={`cursor-pointer p-5 ${isSelectedVideo ? "bg-slate-200" : "bg-inherit"} flex max-w-full items-stretch`}
       onClick={onClick}
     >
       {/* Thumbnail */}
-      <div className="relative mr-4 aspect-[16/9] w-32 flex-shrink-0">
+      <div className="relative mr-3 aspect-[16/9] w-32 flex-shrink-0">
         <Image
           src={imageUrl}
           alt={video.snippet.title}
@@ -32,15 +32,15 @@ const VideoItem: React.FC<Props> = ({ video, onClick, isSelectedVideo }) => {
       </div>
 
       {/* Title and description */}
-      <div className="flex-1">
+      <div className="flex flex-col justify-between gap-1">
         <h3
-          className="text-md line-clamp-2 font-semibold break-all"
+          className="line-clamp-2 text-sm/4 font-semibold break-all"
           title={video.snippet.title}
         >
           {video.snippet.title}
         </h3>
         <p
-          className="line-clamp-2 text-sm break-all text-gray-500"
+          className="line-clamp-3 text-sm/4 break-all text-gray-500"
           title={video.snippet.description}
         >
           {video.snippet.description}

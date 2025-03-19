@@ -4,16 +4,19 @@ import { Video } from "@/types/video";
 import Placeholder from "./Placeholder";
 import VideoView from "./VideoView";
 
-interface Props {
-  video: Video | null;
+export interface PrevNextProps {
   handlePrevVideo: () => void;
   handleNextVideo: () => void;
   hasPrevVideo: boolean;
   hasNextVideo: boolean;
 }
 
+interface Props extends PrevNextProps {
+  video: Video | null;
+}
+
 const ViewingArea: React.FC<Props> = ({ video, ...props }) => (
-  <div className="flex h-full flex-1 items-center justify-center p-8">
+  <div className="flex h-full flex-1 items-center justify-center p-2 lg:p-8">
     {video ? (
       <VideoView key={getVideoId(video)} video={video} {...props} />
     ) : (

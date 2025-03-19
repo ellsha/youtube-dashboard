@@ -1,9 +1,9 @@
 import React from "react";
 
 const Placeholder: React.FC = () => (
-  <div className="text-center text-gray-500">
-    To start, please select a video
-  </div>
+  <span className="py-10 font-medium text-blue-100">
+    Select a video to start! 🚀
+  </span>
 );
 
 export default Placeholder;

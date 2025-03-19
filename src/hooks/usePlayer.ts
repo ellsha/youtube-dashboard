@@ -26,7 +26,7 @@ const PLAYER_VARS: PlayerVars = {
   iv_load_policy: 3,
 };
 
-const usePlayer = (video: Video) => {
+const usePlayer = (video: Video, playerId: string) => {
   const playerRef = useRef<YTPlayer | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(100);
@@ -36,7 +36,7 @@ const usePlayer = (video: Video) => {
 
   useEffect(() => {
     const createPlayer = () => {
-      playerRef.current = new window.YT.Player("player", {
+      playerRef.current = new window.YT.Player(playerId, {
         videoId: getVideoId(video),
         playerVars: PLAYER_VARS,
         events: {

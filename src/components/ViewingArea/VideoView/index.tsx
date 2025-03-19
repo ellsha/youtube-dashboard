@@ -12,8 +12,13 @@ interface Props extends PrevNextProps {
   video: Video;
 }
 
+const PLAYER_ID = "player";
+
 const VideoView: React.FC<Props> = ({ video, ...videoControlProps }) => {
-  const { isLoading, togglePlay, ...playerControls } = usePlayer(video);
+  const { isLoading, togglePlay, ...playerControls } = usePlayer(
+    video,
+    PLAYER_ID,
+  );
   const trimmerControls = useTrimmer({
     ...playerControls,
     togglePlay,
@@ -33,7 +38,10 @@ const VideoView: React.FC<Props> = ({ video, ...videoControlProps }) => {
 
       {/*Video player*/}
       <div className={`${isLoading ? "opacity-0" : "opacity-100"} w-full`}>
-        <div id="player" className="aspect-[16/9] h-auto w-full rounded-md" />
+        <div
+          id={PLAYER_ID}
+          className="aspect-[16/9] h-auto w-full rounded-md"
+        />
       </div>
 
       {/*Toolbar*/}

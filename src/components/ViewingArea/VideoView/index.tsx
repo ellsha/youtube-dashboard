@@ -32,7 +32,7 @@ const VideoView: React.FC<Props> = ({ video, ...videoControlProps }) => {
       )}
 
       {/*Video player*/}
-      <div className={`${isLoading ? "opacity-0" : "opacity-100"} w-max`}>
+      <div className={`${isLoading ? "opacity-0" : "opacity-100"} w-full`}>
         <div id="player" className="aspect-[16/9] h-auto w-full rounded-md" />
       </div>
 

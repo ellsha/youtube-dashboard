@@ -11,8 +11,16 @@ interface Props {
 }
 
 const VideoItem: React.FC<Props> = ({ video, onClick, isSelectedVideo }) => {
-  const thumbnail = video.snippet.thumbnails.medium;
-  const [imageUrl, setImageUrl] = useState<string>(thumbnail.url);
+  const thumbnails = video.snippet.thumbnails;
+  const [imageUrl, setImageUrl] = useState<string>(thumbnails.medium.url);
+  const fallbackImages = [thumbnails.high.url, thumbnails.default.url];
+
+  // if something is wrong with the image url, looking for a fallback image
+  // in case something is wrong with the fallback, repeats the process
+  const getFallbackUrl = () =>
+    fallbackImages[
+      fallbackImages.findIndex((fallback) => fallback === imageUrl) + 1
+    ] ?? imagePlaceholder.src;
 
   return (
     <div
@@ -25,9 +33,11 @@ const VideoItem: React.FC<Props> = ({ video, onClick, isSelectedVideo }) => {
         <Image
           src={imageUrl}
           alt={video.snippet.title}
-          layout="fill"
-          objectFit="cover"
-          onError={() => setImageUrl(imagePlaceholder.src)}
+          priority
+          fill
+          sizes="100%"
+          className="object-cover"
+          onError={() => setImageUrl(getFallbackUrl())}
         />
       </div>
 

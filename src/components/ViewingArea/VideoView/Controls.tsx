@@ -1,6 +1,8 @@
 import React from "react";
 import { PrevNextProps } from "@/components/ViewingArea";
 import { formatTime } from "@/helpers/utils";
+import usePlayer from "@/hooks/usePlayer";
+import useTrimmer from "@/hooks/useTrimmer";
 import {
   BackwardIcon,
   ForwardIcon,
@@ -10,16 +12,18 @@ import {
   SpeakerXMarkIcon,
 } from "@heroicons/react/24/solid";
 
-interface ControlsProps extends PrevNextProps {
-  isPlaying: boolean;
-  togglePlay: () => void;
-  isMuted: boolean;
-  toggleMute: () => void;
-  volume: number;
-  handleVolumeChange: (value: number) => void;
-  currentTime: number;
-  duration: number;
-}
+type ControlsProps = PrevNextProps &
+  Pick<ReturnType<typeof useTrimmer>, "currentTime"> &
+  Pick<
+    ReturnType<typeof usePlayer>,
+    | "isPlaying"
+    | "togglePlay"
+    | "isMuted"
+    | "toggleMute"
+    | "volume"
+    | "handleVolumeChange"
+    | "duration"
+  >;
 
 const Controls: React.FC<ControlsProps> = ({
   isPlaying,

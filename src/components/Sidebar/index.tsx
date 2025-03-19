@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { search } from "@/helpers/search";
 import useDebounce from "@/hooks/useDebounce";
 import { Video } from "@/types/video";
@@ -22,10 +22,15 @@ const Sidebar: React.FC<Props> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const debouncedSearch = useDebounce((videos: Video[], query: string) => {
-    const searchResults = search(videos, query);
-    setFilteredVideos(searchResults);
-  }, 500);
+  const searchFunc = useCallback(
+    (videos: Video[], query: string) => {
+      const searchResults = search(videos, query);
+      setFilteredVideos(searchResults);
+    },
+    [setFilteredVideos],
+  );
+
+  const debouncedSearch = useDebounce(searchFunc, 500);
 
   useEffect(() => {
     debouncedSearch(videos, searchQuery);

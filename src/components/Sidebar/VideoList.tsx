@@ -42,10 +42,19 @@ const VideoList: React.FC<Props> = ({
     }
   }, [isLoading, loadMoreVideos, setIsLoading]);
 
+  const prevSelectedVideoId = useRef<string | null>(null);
+
   // when user clicks on the "next", the next video might be
   // not visible on the screen;
   // this effect scrolls down if the video is partially or fully off-screen
   useEffect(() => {
+    // only trigger when selected video changes
+    if (selectedVideoId === prevSelectedVideoId.current) {
+      return;
+    }
+
+    prevSelectedVideoId.current = selectedVideoId;
+
     const container = containerRef.current;
     if (!selectedVideoId || !container) {
       return;
@@ -59,13 +68,31 @@ const VideoList: React.FC<Props> = ({
     }
 
     const containerRect = container.getBoundingClientRect();
-    const videoRect = videoElement.getBoundingClientRect();
+    const selectedVideoRect = videoElement.getBoundingClientRect();
 
-    // only scroll if the video is hidden (fully or partially) at the bottom
-    if (videoRect.bottom > containerRect.bottom) {
-      videoElement.scrollIntoView({ block: "end", behavior: "smooth" });
+    const isFullyVisible =
+      selectedVideoRect.top >= containerRect.top &&
+      selectedVideoRect.bottom <= containerRect.bottom;
+
+    if (!isFullyVisible) {
+      const lastPageVideos = visibleVideos.slice(-PAGE_LIMIT);
+
+      const isSelectedInLastPage = lastPageVideos.some(
+        (v) => getVideoId(v) === selectedVideoId,
+      );
+
+      if (isSelectedInLastPage) {
+        loadMoreVideos();
+      }
+
+      const scrollOffset =
+        selectedVideoRect.top - containerRect.top + container.scrollTop;
+      container.scrollTo({
+        top: scrollOffset,
+        behavior: "smooth",
+      });
     }
-  }, [selectedVideoId, videos]);
+  }, [loadMoreVideos, selectedVideoId, visibleVideos]);
 
   return (
     <div className="flex-1 overflow-y-auto" ref={containerRef}>

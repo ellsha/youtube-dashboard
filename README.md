@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# YouTube Dashboard 📺
 
-## Getting Started
+This project is a YouTube dashboard built with Next.js, TypeScript and TailwindCSS.
 
-First, run the development server:
+## Live Demo
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Check the live demo here: [Vercel Demo](https://youtube-dashboard-henna.vercel.app/)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Quick Start
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Clone the repo
+- Run `npm install`
+- Run `npm run dev`
+- Visit [http://localhost:3000](http://localhost:3000) in your browser
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Key Features ✨
 
-## Learn More
+- **Sidebar** with a video list, search, and infinite scrolling
+- **Video player** with play/pause, previous/next video buttons, and sound control
+- **Video trimming** with a progress bar, saving trimmed segments in local storage for later use
 
-To learn more about Next.js, take a look at the following resources:
+**System Requirement:** Node 18.18+
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Screenshots
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Here's a preview of what you'll see:
 
-## Deploy on Vercel
+![Screenshot](./docs/screenshot.png)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Areas for Improvement
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+#1 **Video Routing**:
+Adding unique URLs for each video (`/videos/{id}`) so users can refresh the page without losing their place, share
+videos, and bookmark them.
+
+#2 **Dynamic Video Resizing**:
+Making the video player adjust to 100% of the width or height (depending on screen size) while keeping 16:9 aspect
+ratio.

@@ -1,34 +1,32 @@
 import React from "react";
 import Spinner from "@/components/Spinner";
 import { PrevNextProps } from "@/components/ViewingArea";
-import { getVideoId } from "@/helpers/video";
 import usePlayer from "@/hooks/usePlayer";
 import useTrimmer from "@/hooks/useTrimmer";
-import { Video } from "@/types/video";
 import Controls from "./Controls";
 import Trimmer from "./Trimmer";
 
 interface Props extends PrevNextProps {
-  video: Video;
+  videoId: string;
 }
 
 const PLAYER_ID = "player";
 
-const VideoView: React.FC<Props> = ({ video, ...videoControlProps }) => {
+const VideoView: React.FC<Props> = ({ videoId, ...videoControlProps }) => {
   const { isLoading, togglePlay, ...playerControls } = usePlayer(
-    video,
+    videoId,
     PLAYER_ID,
   );
   const trimmerControls = useTrimmer({
     ...playerControls,
+    videoId,
     togglePlay,
-    videoId: getVideoId(video),
   });
 
   return (
     <div className="relative flex min-h-full w-full max-w-5xl flex-col items-center justify-center gap-2 lg:gap-4">
       {/*using relative&absolute centering and opacity-0 instead of hidden*/}
-      {/*to keep constant the height on the block*/}
+      {/*to keep the height of the block constant*/}
       {/*and avoid creating jumping of the height on small screens*/}
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center">

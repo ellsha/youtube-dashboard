@@ -3,14 +3,16 @@ import { clamp } from "@/helpers/utils";
 import { UseTrimmerHandlersProps } from ".";
 import { startDrag } from "./startDrag";
 
+/**
+ * Creates a drag handler for the trimmed area of a video trimmer
+ *
+ * Allows users to navigate through video by dragging within the trimmed
+ * section, updating the playback time based on drag position
+ *
+ * @param props - Object containing both player and trimmer properties
+ */
 export const handleTrimAreaDrag =
-  ({
-    trimmedStart,
-    trimmedEnd,
-    duration,
-    setCurrentTime,
-    seekTo,
-  }: UseTrimmerHandlersProps) =>
+  ({ trimRange, duration, setCurrentTime, seekTo }: UseTrimmerHandlersProps) =>
   (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
     e.preventDefault();
     const targetRect = e.currentTarget.getBoundingClientRect();
@@ -22,7 +24,7 @@ export const handleTrimAreaDrag =
       const posX = clientX - targetRect.left;
       const ratio = posX / targetRect.width;
       const newTime = clamp(
-        trimmedStart + ratio * (trimmedEnd - trimmedStart),
+        trimRange.start + ratio * (trimRange.end - trimRange.start),
         0,
         duration,
       );

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { clamp } from "@/helpers/utils";
 import usePlayer from "@/hooks/usePlayer";
-import useDebounce from "../useDebounce";
 import { handleHandleDrag } from "./handleHandleDrag";
 import { handleTrimAreaDrag } from "./handleTrimAreaDrag";
+import useTrimRange, { TrimRange } from "./useTrimRange";
 
 type UseTrimmerProps = Pick<
   ReturnType<typeof usePlayer>,
@@ -18,16 +18,20 @@ export type UseTrimmerHandlersProps = Pick<
 > & {
   trimmerRef: React.RefObject<HTMLDivElement | null>;
   currentTime: number;
-  trimmedStart: number;
-  trimmedEnd: number;
+  trimRange: TrimRange;
   setCurrentTime: (time: number) => void;
-  setTrimmedStart: (time: number) => void;
-  setTrimmedEnd: (time: number) => void;
 };
 
 // video progress update interval in seconds
 export const UPDATE_INTERVAL = 0.1;
 
+/**
+ * Hook for managing video trimming functionality
+ *
+ * It controls the current playback time within a specified trim range,
+ * provides handlers for dragging trim handles and trim area, and ensures
+ * playback respects the trimmed boundaries
+ */
 const useTrimmer = ({
   seekTo,
   duration,
@@ -38,37 +42,7 @@ const useTrimmer = ({
   const trimmerRef = useRef<HTMLDivElement>(null);
   const [currentTime, setCurrentTime] = useState(0);
 
-  const trimmedStartKey = `${videoId}:trimmedStart`;
-  const trimmedEndKey = `${videoId}:trimmedEnd`;
-
-  // loading the saved trimmedStart and trimmedEnd values from localStorage
-  const [trimmedStart, setTrimmedStart] = useState<number>(() => {
-    const storedTrimmedStart = localStorage.getItem(trimmedStartKey);
-    // fallback to 0 if not found
-    return storedTrimmedStart ? parseInt(storedTrimmedStart) : 0;
-  });
-  const [trimmedEnd, setTrimmedEnd] = useState<number>(() => {
-    const storedTrimmedEnd = localStorage.getItem(trimmedEndKey);
-    // fallback to duration if not found
-    return storedTrimmedEnd ? parseInt(storedTrimmedEnd) : duration;
-  });
-
-  // refreshing trimmedEnd when player is loaded
-  useEffect(() => {
-    if (duration > 0 && trimmedEnd == 0) {
-      setTrimmedEnd(duration);
-    }
-  }, [setTrimmedEnd, duration, trimmedEnd]);
-
-  const debouncedSaveTrimmedValues = useDebounce(() => {
-    localStorage.setItem(trimmedStartKey, JSON.stringify(trimmedStart));
-    localStorage.setItem(trimmedEndKey, JSON.stringify(trimmedEnd));
-  }, 500);
-
-  // saving the trimmedStart and trimmedEnd to localStorage
-  useEffect(() => {
-    debouncedSaveTrimmedValues();
-  }, [debouncedSaveTrimmedValues]);
+  const trimRange = useTrimRange(videoId, duration);
 
   useEffect(() => {
     const updateTime = () => {
@@ -76,14 +50,14 @@ const useTrimmer = ({
         // time on the next interval (current time incremented by 0.1s)
         const time = currentTime + UPDATE_INTERVAL;
 
-        setCurrentTime(clamp(time, trimmedStart, trimmedEnd));
+        setCurrentTime(clamp(time, trimRange.start, trimRange.end));
 
         // the video can only start playing from the trimmedStart
-        if (time < trimmedStart) {
-          seekTo(trimmedStart);
+        if (time < trimRange.start) {
+          seekTo(trimRange.start);
         }
         // pausing the video at trimmed end
-        if (time >= trimmedEnd) {
+        if (time >= trimRange.end) {
           togglePlay();
         }
       }
@@ -92,13 +66,13 @@ const useTrimmer = ({
     const intervalId = setInterval(updateTime, UPDATE_INTERVAL * 1000);
 
     return () => clearInterval(intervalId);
-  }, [isPlaying, trimmedStart, trimmedEnd, seekTo, togglePlay, currentTime]);
+  }, [isPlaying, trimRange, seekTo, togglePlay, currentTime]);
 
   // play/pause toggle with boundary reset
   const safeTogglePlay = () => {
-    if (!isPlaying && currentTime >= trimmedEnd) {
-      seekTo(trimmedStart);
-      setCurrentTime(trimmedStart);
+    if (!isPlaying && currentTime >= trimRange.end) {
+      seekTo(trimRange.start);
+      setCurrentTime(trimRange.start);
     }
     togglePlay();
   };
@@ -107,19 +81,16 @@ const useTrimmer = ({
     trimmerRef,
     duration,
     currentTime,
-    trimmedStart,
-    trimmedEnd,
+    trimRange,
     setCurrentTime,
-    setTrimmedStart,
-    setTrimmedEnd,
     seekTo,
   };
 
   return {
     trimmerRef,
     currentTime,
-    trimmedStart,
-    trimmedEnd,
+    trimmedStart: trimRange.start,
+    trimmedEnd: trimRange.end,
     safeTogglePlay,
     handleLeftHandleDrag: handleHandleDrag(handlerProps, "left"),
     handleRightHandleDrag: handleHandleDrag(handlerProps, "right"),

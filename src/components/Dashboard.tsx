@@ -20,14 +20,10 @@ const Dashboard: React.FC<Props> = ({ videos }) => {
   const prevVideo = filteredVideos[selectedIndex - 1] || null;
   const nextVideo = filteredVideos[selectedIndex + 1] || null;
 
-  const selectedVideo = videos.find(
-    (video) => getVideoId(video) === selectedVideoId,
-  );
-
   return (
     <div className="flex min-w-2xs flex-col lg:min-h-screen lg:flex-row lg:flex-row-reverse">
       <ViewingArea
-        video={selectedVideo ?? null}
+        videoId={selectedVideoId}
         hasPrevVideo={prevVideo !== null}
         hasNextVideo={nextVideo !== null}
         handlePrevVideo={() => {

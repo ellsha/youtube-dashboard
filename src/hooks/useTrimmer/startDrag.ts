@@ -1,5 +1,13 @@
 import React from "react";
 
+/**
+ * Initiates a drag operation using both mouse and touch events,
+ * calling the provided `onMove` callback with the current clientX position
+ * as the user moves the mouse cursor or touch point
+ *
+ * @param e  - Initiating event
+ * @param onMove - Function to call with the clientX position during the drag
+ */
 export const startDrag = (
   e: React.MouseEvent | React.TouchEvent,
   onMove: (clientX: number) => void,

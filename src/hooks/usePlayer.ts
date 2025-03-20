@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { getVideoId } from "@/helpers/video";
-import { Video } from "@/types/video";
 import {
   PlayerEvent,
+  PlayerVars,
   StateChangeEvent,
   YTPlayer,
-  PlayerVars,
 } from "@/types/youtube";
 
 /**
@@ -29,7 +27,18 @@ const PLAYER_VARS: PlayerVars = {
   iv_load_policy: 3,
 };
 
-const usePlayer = (video: Video, playerId: string) => {
+/**
+ * Hook for managing a YouTube video player using the YouTube IFrame API;
+ * It provides functions to
+ * - toggle play/pause
+ * - mute/unmute
+ * - change volume
+ * - seek to a specific time
+ *
+ * @param videoId - YouTube video ID
+ * @param playerId - HTML element ID where the YouTube player will be embedded
+ */
+const usePlayer = (videoId: string, playerId: string) => {
   const playerRef = useRef<YTPlayer | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(100);
@@ -40,7 +49,7 @@ const usePlayer = (video: Video, playerId: string) => {
   useEffect(() => {
     const createPlayer = () => {
       playerRef.current = new window.YT.Player(playerId, {
-        videoId: getVideoId(video),
+        videoId,
         playerVars: PLAYER_VARS,
         events: {
           onReady: (event: PlayerEvent) => {
@@ -50,9 +59,14 @@ const usePlayer = (video: Video, playerId: string) => {
             setIsLoading(false);
           },
           onStateChange: (event: StateChangeEvent) => {
-            if (event.data === window.YT.PlayerState.PLAYING) {
+            const status = event.data;
+
+            if (status === window.YT.PlayerState.PLAYING) {
               setIsPlaying(true);
-            } else if (event.data === window.YT.PlayerState.PAUSED) {
+            } else if (
+              status === window.YT.PlayerState.PAUSED ||
+              status === window.YT.PlayerState.ENDED
+            ) {
               setIsPlaying(false);
             }
           },
@@ -71,41 +85,12 @@ const usePlayer = (video: Video, playerId: string) => {
     }
 
     return () => playerRef.current?.destroy();
-  }, [playerId, video]);
+  }, [playerId, videoId]);
 
-  const togglePlay = () => {
-    if (isPlaying) {
-      playerRef.current?.pauseVideo();
-    } else {
-      playerRef.current?.playVideo();
+  const withPlayer = (callback: (player: YTPlayer) => unknown) => {
+    if (playerRef.current) {
+      callback(playerRef.current);
     }
-  };
-
-  const handleVolumeChange = (newVolume: number) => {
-    if (!playerRef.current) {
-      return;
-    }
-
-    playerRef.current.setVolume(newVolume);
-    setVolume(newVolume);
-  };
-
-  const toggleMute = () => {
-    if (!playerRef.current) {
-      return;
-    }
-
-    if (isMuted) {
-      playerRef.current.unMute();
-      setIsMuted(false);
-    } else {
-      playerRef.current.mute();
-      setIsMuted(true);
-    }
-  };
-
-  const seekTo = (time: number) => {
-    playerRef.current?.seekTo(time);
   };
 
   return {
@@ -115,10 +100,26 @@ const usePlayer = (video: Video, playerId: string) => {
     volume,
     isMuted,
     duration,
-    togglePlay,
-    handleVolumeChange,
-    toggleMute,
-    seekTo,
+    togglePlay: () =>
+      withPlayer((player) =>
+        isPlaying ? player.pauseVideo() : player.playVideo(),
+      ),
+    toggleMute: () =>
+      withPlayer((player) => {
+        if (isMuted) {
+          player.unMute();
+        } else {
+          player.mute();
+        }
+
+        setIsMuted(!isMuted);
+      }),
+    changeVolume: (newVolume: number) =>
+      withPlayer((player) => {
+        player.setVolume(newVolume);
+        setVolume(newVolume);
+      }),
+    seekTo: (time: number) => withPlayer((player) => player.seekTo(time)),
   };
 };
 

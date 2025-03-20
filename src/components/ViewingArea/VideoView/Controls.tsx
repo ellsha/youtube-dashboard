@@ -21,7 +21,7 @@ type ControlsProps = PrevNextProps &
     | "isMuted"
     | "toggleMute"
     | "volume"
-    | "handleVolumeChange"
+    | "changeVolume"
     | "duration"
   >;
 
@@ -31,7 +31,7 @@ const Controls: React.FC<ControlsProps> = ({
   isMuted,
   toggleMute,
   volume,
-  handleVolumeChange,
+  changeVolume,
   handlePrevVideo,
   handleNextVideo,
   hasPrevVideo,
@@ -99,7 +99,7 @@ const Controls: React.FC<ControlsProps> = ({
         min="0"
         max="100"
         value={volume}
-        onChange={(e) => handleVolumeChange(parseInt(e.target.value, 10))}
+        onChange={(e) => changeVolume(parseInt(e.target.value, 10))}
         className="w-15 accent-blue-500 lg:w-20"
       />
     </div>

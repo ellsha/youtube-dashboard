@@ -24,7 +24,7 @@ const VideoView: React.FC<Props> = ({ videoId, ...videoControlProps }) => {
   });
 
   return (
-    <div className="relative flex min-h-full w-full max-w-5xl flex-col items-center justify-center gap-2 lg:gap-4">
+    <div className="relative flex min-h-full w-full flex-col items-center justify-center gap-2 lg:gap-4">
       {/*using relative&absolute centering and opacity-0 instead of hidden*/}
       {/*to keep the height of the block constant*/}
       {/*and avoid creating jumping of the height on small screens*/}

@@ -38,7 +38,7 @@ const Trimmer: React.FC<TrimmerProps> = ({
   );
 
   return (
-    <div className="w-full touch-none rounded-md bg-white p-7">
+    <div className="w-full touch-none rounded-md bg-white p-6">
       {/*Progress bar base*/}
       <div
         ref={trimmerRef}

@@ -33,6 +33,6 @@ Here's a preview of what you'll see:
 Adding unique URLs for each video (`/videos/{id}`) so users can refresh the page without losing their place, share
 videos, and bookmark them.
 
-#2 **Dynamic Video Resizing**:
+#2 **Dynamic Video Player Resizing**:
 Making the video player adjust to 100% of the width or height (depending on screen size) while keeping 16:9 aspect
 ratio.

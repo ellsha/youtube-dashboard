@@ -74,13 +74,13 @@ const Controls: React.FC<ControlsProps> = ({
     </div>
 
     {/* Middle section (Current time / Total time) */}
-    <div className="whitespace-nowrap text-gray-900">
+    <div className="w-40 text-center whitespace-nowrap text-gray-900">
       {formatTime(currentTime)}
       <span className="hidden sm:inline"> / {formatTime(duration)}</span>
     </div>
 
     {/* Right section (Sound control) */}
-    <div className="flex items-center space-x-1 lg:space-x-2">
+    <div className="flex w-22 justify-end space-x-1 lg:w-24 lg:space-x-2">
       {/* Mute/Unmute button */}
       <button
         onClick={toggleMute}
@@ -99,8 +99,8 @@ const Controls: React.FC<ControlsProps> = ({
         min="0"
         max="100"
         value={volume}
-        onChange={(e) => changeVolume(parseInt(e.target.value, 10))}
-        className="w-15 accent-blue-500 lg:w-20"
+        onChange={(e) => changeVolume(parseInt(e.target.value))}
+        className="hidden accent-blue-500 lg:inline-block lg:w-full"
       />
     </div>
   </div>

@@ -40,9 +40,8 @@ const useTrimmer = ({
   videoId,
 }: UseTrimmerProps) => {
   const trimmerRef = useRef<HTMLDivElement>(null);
-  const [currentTime, setCurrentTime] = useState(0);
-
   const trimRange = useTrimRange(videoId, duration);
+  const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => {
     const updateTime = () => {
@@ -70,7 +69,11 @@ const useTrimmer = ({
 
   // play/pause toggle with boundary reset
   const safeTogglePlay = () => {
-    if (!isPlaying && currentTime >= trimRange.end) {
+    if (
+      !isPlaying &&
+      (currentTime >= trimRange.end || currentTime < trimRange.start)
+    ) {
+      console.log(`setting ${trimRange.start}`);
       seekTo(trimRange.start);
       setCurrentTime(trimRange.start);
     }

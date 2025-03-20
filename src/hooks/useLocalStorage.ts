@@ -1,5 +1,4 @@
 import { useState } from "react";
-import useDebounce from "./useDebounce";
 
 const useLocalStorage = <T>(key: string, defaultValue: T) => {
   const [storedValue, setStoredValue] = useState<T>(() => {
@@ -21,16 +20,7 @@ const useLocalStorage = <T>(key: string, defaultValue: T) => {
     }
   };
 
-  const storeValueDebounced = useDebounce((value: T) => {
-    try {
-      setStoredValue(value);
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.warn("Error setting localStorage key:", key, error);
-    }
-  }, 500);
-
-  return { storedValue, storeValue, storeValueDebounced };
+  return { storedValue, storeValue };
 };
 
 export default useLocalStorage;

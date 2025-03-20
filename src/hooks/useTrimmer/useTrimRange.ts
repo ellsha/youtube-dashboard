@@ -12,16 +12,14 @@ const useTrimRange = (videoId: string, duration: number): TrimRange => {
   const startKey = `${videoId}:start`;
   const endKey = `${videoId}:end`;
 
-  const {
-    storedValue: start,
-    storeValue: setStart,
-    storeValueDebounced: debouncedSaveStart,
-  } = useLocalStorage<number>(startKey, 0);
-  const {
-    storedValue: end,
-    storeValue: setEnd,
-    storeValueDebounced: debouncedSaveEnd,
-  } = useLocalStorage<number>(endKey, 0);
+  const { storedValue: start, storeValue: setStart } = useLocalStorage<number>(
+    startKey,
+    0,
+  );
+  const { storedValue: end, storeValue: setEnd } = useLocalStorage<number>(
+    endKey,
+    duration,
+  );
 
   // refreshing trimmed end when player is loaded
   useEffect(() => {
@@ -29,12 +27,6 @@ const useTrimRange = (videoId: string, duration: number): TrimRange => {
       setEnd(duration);
     }
   }, [setEnd, duration, end]);
-
-  // saving to the local storage
-  useEffect(() => {
-    debouncedSaveStart(start);
-    debouncedSaveEnd(end);
-  }, [debouncedSaveEnd, debouncedSaveStart, end, start]);
 
   return { start, setStart, end, setEnd };
 };

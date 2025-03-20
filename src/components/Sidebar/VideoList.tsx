@@ -36,11 +36,11 @@ const VideoList: React.FC<Props> = ({
   }, [videos]);
 
   useEffect(() => {
-    if (isLoading) {
+    if (isLoading && visibleVideos.length < videos.length) {
       loadMoreVideos();
       setIsLoading(false);
     }
-  }, [isLoading, loadMoreVideos, setIsLoading]);
+  }, [isLoading, loadMoreVideos, setIsLoading, visibleVideos, videos]);
 
   // check if the container is filled after visibleVideos updates
   // this way we can initially load more videos if 10 videos don't occupy
@@ -48,12 +48,13 @@ const VideoList: React.FC<Props> = ({
   useEffect(() => {
     if (
       !isLoading &&
+      visibleVideos.length < videos.length &&
       containerRef.current &&
       containerRef.current.scrollHeight <= containerRef.current.clientHeight
     ) {
       setIsLoading(true);
     }
-  }, [isLoading, loadMoreVideos, setIsLoading]);
+  }, [isLoading, visibleVideos, videos, setIsLoading]);
 
   const prevSelectedVideoId = useRef<string | null>(null);
 
@@ -127,7 +128,6 @@ const VideoList: React.FC<Props> = ({
           />
         );
       })}
-      {isLoading && <div className="py-4 text-center">Loading...</div>}
     </div>
   );
 };

@@ -88,7 +88,7 @@ const useTrimmer = ({
 
   return {
     trimmerRef,
-    currentTime,
+    currentTime: clamp(trimRange.start, currentTime, trimRange.end),
     trimmedStart: trimRange.start,
     trimmedEnd: trimRange.end,
     safeTogglePlay,

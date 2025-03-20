@@ -8,6 +8,9 @@ import {
   PlayerVars,
 } from "@/types/youtube";
 
+/**
+ * @see https://developers.google.com/youtube/player_parameters
+ */
 const PLAYER_VARS: PlayerVars = {
   // This parameter specifies whether the initial video will
   // automatically start to play when the player loads
@@ -68,7 +71,7 @@ const usePlayer = (video: Video, playerId: string) => {
     }
 
     return () => playerRef.current?.destroy();
-  }, [video]);
+  }, [playerId, video]);
 
   const togglePlay = () => {
     if (isPlaying) {

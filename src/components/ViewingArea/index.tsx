@@ -16,7 +16,7 @@ interface Props extends PrevNextProps {
 }
 
 const ViewingArea: React.FC<Props> = ({ video, ...props }) => (
-  <div className="flex h-full flex-1 items-center justify-center p-2 lg:p-8">
+  <div className="flex flex-1 items-center justify-center px-2 py-4 lg:h-screen lg:flex-wrap lg:overflow-y-auto lg:p-6">
     {video ? (
       <VideoView key={getVideoId(video)} video={video} {...props} />
     ) : (

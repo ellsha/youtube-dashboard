@@ -44,7 +44,6 @@ const Sidebar: React.FC<Props> = ({
         selectedVideoId={selectedVideoId}
         setSelectedVideoId={setSelectedVideoId}
       />
-      <div className="absolute bottom-0 h-10 w-full shadow-[inset_0px_-15px_15px_-5px_rgba(255,255,255,0.8)]" />
     </div>
   );
 };

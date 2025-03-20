@@ -25,7 +25,7 @@ const Dashboard: React.FC<Props> = ({ videos }) => {
   );
 
   return (
-    <div className="flex h-screen min-w-2xs flex-col lg:flex-row lg:flex-row-reverse">
+    <div className="flex min-w-2xs flex-col lg:min-h-screen lg:flex-row lg:flex-row-reverse">
       <ViewingArea
         video={selectedVideo ?? null}
         hasPrevVideo={prevVideo !== null}

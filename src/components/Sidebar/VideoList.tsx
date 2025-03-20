@@ -42,11 +42,25 @@ const VideoList: React.FC<Props> = ({
     }
   }, [isLoading, loadMoreVideos, setIsLoading]);
 
+  // check if the container is filled after visibleVideos updates
+  // this way we can initially load more videos if 10 videos don't occupy
+  // all available space
+  useEffect(() => {
+    if (
+      !isLoading &&
+      containerRef.current &&
+      containerRef.current.scrollHeight <= containerRef.current.clientHeight
+    ) {
+      setIsLoading(true);
+    }
+  }, [isLoading, loadMoreVideos, setIsLoading]);
+
   const prevSelectedVideoId = useRef<string | null>(null);
 
-  // when user clicks on the "next", the next video might be
+  // when a user clicks on the "next", the next video might be
   // not visible on the screen;
   // this effect scrolls down if the video is partially or fully off-screen
+  // and shows the selected item at the top of the list
   useEffect(() => {
     // only trigger when selected video changes
     if (selectedVideoId === prevSelectedVideoId.current) {

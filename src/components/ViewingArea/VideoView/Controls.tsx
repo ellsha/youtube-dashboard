@@ -39,7 +39,7 @@ const Controls: React.FC<ControlsProps> = ({
   currentTime,
   duration,
 }) => (
-  <div className="flex w-full items-center justify-between rounded-md bg-white px-2 py-1 md:w-min md:gap-10 md:px-4 md:py-2">
+  <div className="flex w-full items-center justify-between rounded-md bg-white px-2 py-1 lg:w-min lg:gap-10 lg:px-4 lg:py-2">
     {/* Left section */}
     <div className="flex items-center gap-1 md:gap-2">
       {/* Previous video button */}

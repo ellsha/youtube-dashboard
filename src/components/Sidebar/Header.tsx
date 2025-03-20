@@ -8,7 +8,7 @@ interface Props {
 
 const Header: React.FC<Props> = ({ searchQuery, setSearchQuery }) => (
   <div className="sticky top-0 z-10 flex w-full flex-col bg-inherit p-5 shadow-md shadow-black/5">
-    <h2 className="text-xl font-semibold">Video Dashboard</h2>
+    <h2 className="text-xl font-semibold">YouTube Dashboard</h2>
     <div className="relative mt-2">
       <input
         type="text"
